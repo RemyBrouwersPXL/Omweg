@@ -10,6 +10,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.remybrouwers.omweg",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -19,10 +20,17 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro"
     },
     "plugins": [
+      "expo-router",
+      "expo-sqlite",
       "@maplibre/maplibre-react-native"
-    ]
+    ],
+    "scheme": "omweg",
+    "experiments": {
+      "typedRoutes": true
+    }
   }
 }

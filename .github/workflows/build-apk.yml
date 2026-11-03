@@ -1,0 +1,82 @@
+name: Build Android APK
+
+# Builds an installable .apk with the EAS "preview" profile and publishes it
+# as a GitHub Actions artifact.
+#
+# The build runs ON THE GITHUB RUNNER (`eas build --local`), not on EAS cloud
+# servers, so it consumes no EAS build credits and works on the free Expo plan.
+# Expo is only contacted to verify the project and fetch the Android keystore.
+
+on:
+  push:
+    branches: [main] # merged PRs land on main as a push, so this covers merges too
+  workflow_dispatch: # allow manual runs from the Actions tab
+
+concurrency:
+  group: build-apk-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-apk:
+    name: EAS local build (preview → apk)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Check EXPO_TOKEN secret
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          if [ -z "$EXPO_TOKEN" ]; then
+            echo "::error::Missing EXPO_TOKEN repository secret. See README / PR description for setup."
+            exit 1
+          fi
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Setup Java (JDK 17)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      # ubuntu-latest ships with the Android SDK preinstalled; this step makes
+      # ANDROID_HOME / sdkmanager deterministic and accepts licenses.
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Setup Expo and EAS CLI
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build APK locally with EAS
+        run: |
+          eas build \
+            --platform android \
+            --profile preview \
+            --local \
+            --non-interactive \
+            --output "${{ github.workspace }}/omweg-${{ github.sha }}.apk"
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: omweg-apk-${{ github.run_number }}
+          path: ${{ github.workspace }}/omweg-${{ github.sha }}.apk
+          if-no-files-found: error
+          retention-days: 30
