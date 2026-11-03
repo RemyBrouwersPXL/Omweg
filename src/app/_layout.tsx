@@ -3,9 +3,17 @@ import '../../global.css';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, Text, View } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { Button } from '@/components/ui';
 import { useAnonymousSession } from '@/lib/useAnonymousSession';
+
+// Dark chrome for the Manhunt lobby flow (manhunt.tsx switches the status bar to light).
+const lobbyScreenOptions = {
+  headerStyle: { backgroundColor: '#09090b' },
+  headerTintColor: '#fff',
+  contentStyle: { backgroundColor: '#09090b' },
+};
 
 export default function RootLayout() {
   const { session, error, retry } = useAnonymousSession();
@@ -27,19 +35,16 @@ export default function RootLayout() {
   }
 
   return (
-    <>
-      <StatusBar style="light" />
-      <Stack
-        screenOptions={{
-          headerStyle: { backgroundColor: '#09090b' },
-          headerTintColor: '#fff',
-          contentStyle: { backgroundColor: '#09090b' },
-        }}
-      >
-        <Stack.Screen name="index" options={{ title: 'Manhunt' }} />
-        <Stack.Screen name="join" options={{ title: 'Join lobby' }} />
-        <Stack.Screen name="lobby/[id]" options={{ title: 'Lobby' }} />
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <StatusBar style="dark" />
+      <Stack>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="quests" options={{ title: 'My Quests' }} />
+        <Stack.Screen name="radar/[lobbyId]" options={{ headerShown: false }} />
+        <Stack.Screen name="manhunt" options={{ ...lobbyScreenOptions, title: 'Manhunt' }} />
+        <Stack.Screen name="join" options={{ ...lobbyScreenOptions, title: 'Join lobby' }} />
+        <Stack.Screen name="lobby/[id]" options={{ ...lobbyScreenOptions, title: 'Lobby' }} />
       </Stack>
-    </>
+    </GestureHandlerRootView>
   );
 }
