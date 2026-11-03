@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from 'react-native';
 
 import { findCatches } from './geo';
 import { positionOf, type LobbyPlayer, type PlayerRole } from './types';
-import { useLobbyPlayers } from './useLobbyPlayers';
+import { useLobbyPlayers } from '@/lib/useLobbyPlayers';
 
 // Free OpenStreetMap raster tiles — no API key. Attribution is required by the OSM tile policy.
 const OSM_STYLE: StyleSpecification = {

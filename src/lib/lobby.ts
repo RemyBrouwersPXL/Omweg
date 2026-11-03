@@ -24,6 +24,7 @@ export type LobbyPlayer = {
   role: PlayerRole;
   live_lat: number | null;
   live_lng: number | null;
+  location_updated_at: string | null;
   joined_at: string;
 };
 
@@ -80,6 +81,12 @@ export async function fetchLobby(lobbyId: string): Promise<Lobby> {
     .single();
   if (error) throw new Error(error.message);
   return data as Lobby;
+}
+
+/** Host only: assigns roles (one random hunter) and sets the lobby to 'active'. */
+export async function startLobby(lobbyId: string): Promise<void> {
+  const { error } = await supabase.rpc('start_lobby', { p_lobby_id: lobbyId });
+  if (error) throw new Error(error.message);
 }
 
 export async function fetchLobbyPlayers(lobbyId: string): Promise<LobbyPlayer[]> {

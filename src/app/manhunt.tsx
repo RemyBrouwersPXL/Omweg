@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 
 import { Button, ErrorText, Field } from '@/components/ui';
+import { requireLocationAccess } from '@/features/gps/permissions';
 import { createLobby, DISPLAY_NAME_MAX_LENGTH, isValidDisplayName } from '@/lib/lobby';
 
 export default function ManhuntScreen() {
@@ -16,6 +17,7 @@ export default function ManhuntScreen() {
     setCreating(true);
     setError(null);
     try {
+      await requireLocationAccess();
       const lobbyId = await createLobby(name);
       router.push({ pathname: '/lobby/[id]', params: { id: lobbyId } });
     } catch (e) {

@@ -26,7 +26,15 @@
     "plugins": [
       "expo-router",
       "expo-sqlite",
-      "@maplibre/maplibre-react-native"
+      "@maplibre/maplibre-react-native",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Omweg shares your location with your lobby during an active manhunt.",
+          "isAndroidBackgroundLocationEnabled": true,
+          "isAndroidForegroundServiceEnabled": true
+        }
+      ]
     ],
     "scheme": "omweg",
     "experiments": {

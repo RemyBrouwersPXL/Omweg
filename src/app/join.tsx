@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 
 import { Button, ErrorText, Field } from '@/components/ui';
+import { requireLocationAccess } from '@/features/gps/permissions';
 import {
   DISPLAY_NAME_MAX_LENGTH,
   isValidDisplayName,
@@ -25,6 +26,7 @@ export default function JoinScreen() {
     setJoining(true);
     setError(null);
     try {
+      await requireLocationAccess();
       const lobbyId = await joinLobby(code, name);
       router.replace({ pathname: '/lobby/[id]', params: { id: lobbyId } });
     } catch (e) {

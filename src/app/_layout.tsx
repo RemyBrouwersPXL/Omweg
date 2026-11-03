@@ -1,4 +1,6 @@
 import '../../global.css';
+// Defines the background GPS task; TaskManager tasks must be registered at module top level.
+import '@/features/gps/locationBroadcast';
 
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
