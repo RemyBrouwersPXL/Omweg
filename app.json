@@ -39,6 +39,12 @@
     "scheme": "omweg",
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "64695801-e31d-47f8-9eca-83117e88c385"
+      }
+    },
+    "owner": "djrym"
   }
 }
