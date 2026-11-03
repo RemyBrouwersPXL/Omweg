@@ -1,18 +1,11 @@
-export type PlayerRole = 'hunter' | 'runner';
+import type { LobbyPlayer } from '@/lib/lobby';
 
-/** Row shape of the `lobby_players` table. Coordinates are null until the player's first GPS fix. */
-export type LobbyPlayer = {
-  id: string;
-  lobby_id: string;
-  user_id: string;
-  role: PlayerRole;
-  latitude: number | null;
-  longitude: number | null;
-};
+export type { LobbyPlayer, PlayerRole } from '@/lib/lobby';
 
 export type LatLng = { latitude: number; longitude: number };
 
+/** A player's live position; null until their first GPS fix. */
 export function positionOf(player: LobbyPlayer): LatLng | null {
-  if (player.latitude == null || player.longitude == null) return null;
-  return { latitude: player.latitude, longitude: player.longitude };
+  if (player.live_lat == null || player.live_lng == null) return null;
+  return { latitude: player.live_lat, longitude: player.live_lng };
 }

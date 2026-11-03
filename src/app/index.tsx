@@ -63,11 +63,18 @@ export default function QuestFeed() {
     <SafeAreaView className="flex-1 bg-neutral-100">
       <View className="flex-row items-center justify-between px-6 pb-2 pt-4">
         <Text className="text-3xl font-black text-neutral-900">Side Quests</Text>
-        <Link href="/quests" asChild>
-          <Pressable accessibilityRole="button" className="rounded-full bg-neutral-900 px-4 py-2 active:opacity-70">
-            <Text className="font-semibold text-white">My quests</Text>
-          </Pressable>
-        </Link>
+        <View className="flex-row gap-2">
+          <Link href="/manhunt" asChild>
+            <Pressable accessibilityRole="button" className="rounded-full bg-emerald-500 px-4 py-2 active:opacity-70">
+              <Text className="font-semibold text-white">Manhunt</Text>
+            </Pressable>
+          </Link>
+          <Link href="/quests" asChild>
+            <Pressable accessibilityRole="button" className="rounded-full bg-neutral-900 px-4 py-2 active:opacity-70">
+              <Text className="font-semibold text-white">My quests</Text>
+            </Pressable>
+          </Link>
+        </View>
       </View>
 
       <Text className="h-6 px-6 text-sm text-neutral-500" numberOfLines={1} accessibilityLiveRegion="polite">

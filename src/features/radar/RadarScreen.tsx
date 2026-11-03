@@ -21,7 +21,7 @@ const OSM_STYLE: StyleSpecification = {
   layers: [{ id: 'osm-layer', type: 'raster', source: 'osm' }],
 };
 
-const ROLE_COLOR: Record<PlayerRole, string> = { hunter: '#D7263D', runner: '#1B98E0' };
+const ROLE_COLOR: Record<PlayerRole, string> = { hunter: '#D7263D', runner: '#1B98E0', unassigned: '#71717A' };
 
 type Props = { lobbyId: string; userId: string };
 
@@ -44,7 +44,7 @@ export function RadarScreen({ lobbyId, userId }: Props) {
         )}
         {others.map((p) => {
           const pos = positionOf(p);
-          return pos && <PlayerMarker key={p.id} player={p} lngLat={[pos.longitude, pos.latitude]} />;
+          return pos && <PlayerMarker key={p.user_id} player={p} lngLat={[pos.longitude, pos.latitude]} />;
         })}
       </Map>
 
@@ -72,7 +72,7 @@ type MarkerProps = { player: LobbyPlayer; lngLat: [number, number]; isSelf?: boo
 function PlayerMarker({ player, lngLat, isSelf = false }: MarkerProps) {
   const color = ROLE_COLOR[player.role];
   return (
-    <ViewAnnotation id={`player-${player.id}`} lngLat={lngLat} anchor="center">
+    <ViewAnnotation id={`player-${player.user_id}`} lngLat={lngLat} anchor="center">
       <View
         collapsable={false}
         accessibilityLabel={`${isSelf ? 'You' : player.role}`}
@@ -83,7 +83,7 @@ function PlayerMarker({ player, lngLat, isSelf = false }: MarkerProps) {
           isSelf && styles.selfMarker,
         ]}
       >
-        <Text style={styles.markerText}>{isSelf ? '★' : player.role === 'hunter' ? 'H' : 'R'}</Text>
+        <Text style={styles.markerText}>{isSelf ? '★' : { hunter: 'H', runner: 'R', unassigned: '?' }[player.role]}</Text>
       </View>
     </ViewAnnotation>
   );

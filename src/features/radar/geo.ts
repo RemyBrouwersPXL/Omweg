@@ -23,10 +23,10 @@ export type Catch = { enemy: LobbyPlayer; distanceM: number };
  */
 export function findCatches(self: LobbyPlayer, players: LobbyPlayer[]): Catch[] {
   const selfPos = positionOf(self);
-  if (!selfPos) return [];
+  if (!selfPos || self.role === 'unassigned') return [];
   const catches: Catch[] = [];
   for (const enemy of players) {
-    if (enemy.id === self.id || enemy.role === self.role) continue;
+    if (enemy.user_id === self.user_id || enemy.role === self.role || enemy.role === 'unassigned') continue;
     const pos = positionOf(enemy);
     if (!pos) continue;
     const distanceM = haversineMeters(selfPos, pos);

@@ -27,7 +27,7 @@ export function useLobbyPlayers(lobbyId: string): State {
       const { data, error } = await supabase.from('lobby_players').select('*').eq('lobby_id', lobbyId);
       if (error) return fail(error.message);
       rows.clear();
-      for (const row of data as LobbyPlayer[]) rows.set(row.id, row);
+      for (const row of data as LobbyPlayer[]) rows.set(row.user_id, row);
       publish();
     };
 
@@ -38,9 +38,9 @@ export function useLobbyPlayers(lobbyId: string): State {
         { event: '*', schema: 'public', table: 'lobby_players', filter: `lobby_id=eq.${lobbyId}` },
         (payload) => {
           if (payload.eventType === 'DELETE') {
-            if (payload.old.id) rows.delete(payload.old.id);
+            if (payload.old.user_id) rows.delete(payload.old.user_id);
           } else {
-            rows.set(payload.new.id, payload.new);
+            rows.set(payload.new.user_id, payload.new);
           }
           publish();
         },
