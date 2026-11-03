@@ -54,6 +54,8 @@ jobs:
       # ANDROID_HOME / sdkmanager deterministic and accepts licenses.
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools'
 
       - name: Setup Expo and EAS CLI
         uses: expo/expo-github-action@v8
