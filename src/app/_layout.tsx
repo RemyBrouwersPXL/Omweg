@@ -11,6 +11,7 @@ export default function RootLayout() {
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="quests" options={{ title: 'My Quests' }} />
+        <Stack.Screen name="radar/[lobbyId]" options={{ headerShown: false }} />
       </Stack>
     </GestureHandlerRootView>
   );
