@@ -41,7 +41,7 @@ export default function RootLayout() {
       <StatusBar style="dark" />
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="quests" options={{ title: 'My Quests' }} />
+        <Stack.Screen name="quests" options={{ headerShown: false }} />
         <Stack.Screen name="radar/[lobbyId]" options={{ headerShown: false }} />
         <Stack.Screen name="manhunt" options={{ ...lobbyScreenOptions, title: 'Manhunt' }} />
         <Stack.Screen name="join" options={{ ...lobbyScreenOptions, title: 'Join lobby' }} />

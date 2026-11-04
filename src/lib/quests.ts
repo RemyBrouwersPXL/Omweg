@@ -30,17 +30,57 @@ function timeOfDay(hour: number): string {
   return 'night';
 }
 
+// A few themes are drawn at random per batch so the feed doesn't converge on
+// the same "take a walk / look at a tree" ideas.
+const QUEST_THEMES = [
+  'sprint or speed challenge (beat a time, race a bus, outrun a traffic light)',
+  'parkour-lite movement (balance on curbs, vault low walls, stair climbs) - safe, no climbing on buildings',
+  'urban exploration (find the highest/oldest/strangest spot reachable on foot)',
+  'scavenger hunt (find and photograph 5 specific things in limited time)',
+  'navigation challenge (walk/run to a point using only the sun, a compass or street names)',
+  'endurance or strength mini-workout using street furniture (benches, stairs, railings)',
+  'stealth or spy mission (tail a landmark route unseen, reach a spot without being noticed)',
+  'creative photo or video stunt (recreate a movie scene, forced perspective shot)',
+  'social dare that is kind and harmless (get a stranger to recommend a hidden spot)',
+  'random route (flip a coin at every crossing for 15 minutes, then find your way back)',
+  'geo-art (run or walk a route that draws a shape or letter on a GPS map)',
+  'speed collecting (touch 10 different lampposts / trees / benches as fast as possible)',
+];
+
+function pickThemes(n: number): string[] {
+  const pool = [...QUEST_THEMES];
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  return pool.slice(0, n);
+}
+
 function buildPrompt(now: Date, count: number, avoidTitles: string[]): string {
   const weekday = now.toLocaleDateString('en-US', { weekday: 'long' });
   const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
-  const avoid = avoidTitles.length ? `\nDo not repeat or closely resemble these: ${avoidTitles.join('; ')}.` : '';
+  const tod = timeOfDay(now.getHours());
+  const themes = pickThemes(Math.min(count, 4)).map((t) => `- ${t}`).join('\n');
+  const avoid = avoidTitles.length ? `\nNever repeat or closely resemble these: ${avoidTitles.join('; ')}.` : '';
 
-  return `You are the quest master of "Side Quest", a game that turns ordinary days into small real-world adventures.
-It is ${weekday}, ${time} (${timeOfDay(now.getHours())}).
-Generate ${count} short, actionable OUTDOOR side quests a person can start right now, fitting this time of day.
-Rules: safe, legal, free or nearly free, no special equipment, doable alone in 5-60 minutes, playful and specific.
-Title: max 6 words, imperative. Description: one sentence, max 25 words, says exactly what to do.
-xp: 10-100, scaled by effort. minutes: estimated duration.${avoid}
+  return `You are the quest master of "Side Quest", a game that turns ordinary days into real-world ADVENTURES.
+It is ${weekday}, ${time} (${tod}).
+Generate ${count} OUTDOOR side quests a person can start right now. They must get the player MOVING: running, sprinting, climbing stairs, exploring, racing the clock.
+
+Draw inspiration from these themes (spread the quests across them):
+${themes}
+
+Every quest MUST have:
+- a physical action (move, run, climb stairs, explore, hunt for something),
+- a concrete, measurable goal (a number, a time limit, a distance, a specific thing to find or photograph),
+- a twist that makes it feel like a game (a rule, a dare, a constraint, a mission framing).
+
+BAD (too boring, never do this): "Take a walk in the park", "Look at the sky", "Notice 3 trees", "Breathe fresh air", "Smile at someone".
+GOOD: "Sprint to the third lamppost, walk back, repeat 8 times in under 6 minutes", "Find 5 different doors painted red within 20 minutes and photograph each one", "Take only left turns for 10 minutes, then navigate home without your map".
+
+Rules: safe, legal, free, no special equipment, doable alone in 5-60 minutes, fits the ${tod} (at night: well-lit, populated areas only). No trespassing, no traffic risks, no bothering strangers.
+Title: max 6 words, punchy, imperative. Description: one or two sentences, max 35 words, says exactly what to do and when it counts as done.
+xp: 10-100, scaled by physical effort and difficulty. minutes: estimated duration.${avoid}
 Respond with JSON only: {"quests":[{"title":string,"description":string,"xp":number,"minutes":number}]}`;
 }
 

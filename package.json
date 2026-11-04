@@ -7,6 +7,7 @@
     "@supabase/supabase-js": "^2.118.0",
     "expo": "~58.0.23",
     "expo-constants": "~58.0.15",
+    "expo-dev-client": "~58.0.18",
     "expo-linking": "~58.0.16",
     "expo-location": "~58.0.20",
     "expo-router": "~58.0.30",
@@ -34,8 +35,8 @@
   },
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "lint": "expo lint",
     "typecheck": "tsc --noEmit"
